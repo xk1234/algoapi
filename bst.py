@@ -1,6 +1,6 @@
 import array
 import numpy as np
-from IPython.display import Image
+from graphviz import Digraph
 
 class Node:
     def __init__(self, data, left=None, right=None):
@@ -105,21 +105,22 @@ class BST:
                 break
         return curr
     
+    @staticmethod
     def visualize_tree(tree):
         def add_nodes_edges(tree, dot=None):
             # Create Digraph object
             if dot is None:
                 dot = Digraph()
-                dot.node(name=str(tree), label=str(tree.val))
+                dot.node(name=str(tree), label=str(tree.data))
 
             # Add nodes
             if tree.left:
-                dot.node(name=str(tree.left) ,label=str(tree.left.val))
+                dot.node(name=str(tree.left) ,label=str(tree.left.data))
                 dot.edge(str(tree), str(tree.left))
                 dot = add_nodes_edges(tree.left, dot=dot)
                 
             if tree.right:
-                dot.node(name=str(tree.right) ,label=str(tree.right.val))
+                dot.node(name=str(tree.right) ,label=str(tree.right.data))
                 dot.edge(str(tree), str(tree.right))
                 dot = add_nodes_edges(tree.right, dot=dot)
 
@@ -128,8 +129,8 @@ class BST:
         # Add nodes recursively and create a list of edges
         dot = add_nodes_edges(tree)
 
-        # Visualize the graph
-        display(dot)
+        # # Visualize the graph
+        # display(dot)
         
         return dot
     
@@ -155,3 +156,7 @@ for i in range(10):
 print(allrs)
 print(f"size: {b.size()}")
 print(b.search(18).data)
+
+dot = BST.visualize_tree(b.root)
+dot.format = 'png'
+dot.view(filename='digraph', directory='./')
